@@ -1,0 +1,21 @@
+{
+  "name": "wetube",
+  "version": "1.0.0",
+  "description": "The best way to watch videos.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkw9603/Wetube-reloaded.git"
+  },
+  "scripts": {
+    "win": "node index.js"
+  },
+  "author": "Byun Ki Won(Flow)<bkw9603@naver.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bkw9603/Wetube-reloaded/issues"
+  },
+  "homepage": "https://github.com/bkw9603/Wetube-reloaded#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
