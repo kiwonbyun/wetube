@@ -7,7 +7,7 @@
     "url": "git+https://github.com/bkw9603/Wetube-reloaded.git"
   },
   "scripts": {
-    "win": "node index.js"
+    "dev": "nodemon --exec babel-node src/server.js"
   },
   "author": "Byun Ki Won(Flow)<bkw9603@naver.com>",
   "license": "MIT",
@@ -17,5 +17,11 @@
   "homepage": "https://github.com/bkw9603/Wetube-reloaded#readme",
   "dependencies": {
     "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.8",
+    "nodemon": "^2.0.15"
   }
 }
