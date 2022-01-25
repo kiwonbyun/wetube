@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Video from "../models/video";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -130,10 +131,67 @@ export const finishGithubLogin = async (req, res) => {
     res.redirect("/login");
   }
 };
-
-export const edit = (req, res) => res.send("Edit User");
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
-export const see = (req, res) => res.send("see user");
+
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+  const { _id, avatarUrl } = req.session.user;
+  const { name, email, username, location } = req.body;
+  const { file } = req;
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      avatarUrl: file ? file.path : avatarUrl,
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+  return res.redirect("/users/edit");
+};
+
+export const getChangePassword = (req, res) => {
+  return res.render("change-password", { pageTitle: "Change-password" });
+};
+export const postChangePassword = async (req, res) => {
+  const { _id, password } = req.session.user;
+  const { oldPassword, newPassword, newPasswordComfirm } = req.body;
+  const ok = await bcrypt.compare(oldPassword, password);
+  if (!ok) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change-password",
+      errorMessage: "The Old password is incorrect.",
+    });
+  }
+  if (newPassword !== newPasswordComfirm) {
+    return res.status(400).render("change-password", {
+      pageTitle: "Change-password",
+      errorMessage: "The new Password does not match.",
+    });
+  }
+  const user = await User.findById(_id);
+  user.password = newPassword;
+  await user.save();
+  req.session.user.password = user.password;
+  return res.redirect("/users/logout");
+};
+
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id).populate("videos");
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found." });
+  }
+  return res.render("profile", {
+    pageTitle: `${user.name}의 Profile`,
+    user,
+  });
+};
