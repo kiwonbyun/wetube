@@ -105,11 +105,15 @@ const handleVideoContainerClick = () => {
 };
 
 const handleVideoKeydown = (event) => {
-  console.log(event.code);
   if (event.code === "Space") {
     video.paused ? video.play() : video.pause();
     playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
   }
+};
+
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, { method: "post" });
 };
 
 playBtnIcon.addEventListener("click", handlePlayClick);
@@ -123,3 +127,4 @@ video.addEventListener("mousemove", handleMouseMove);
 video.addEventListener("mouseleave", handleMouseLeave);
 video.addEventListener("click", handleVideoContainerClick);
 document.addEventListener("keydown", handleVideoKeydown);
+video.addEventListener("ended", handleEnded);
